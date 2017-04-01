@@ -10,7 +10,7 @@ import Leap, sys, thread, time
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
 
-class SampleListener(Leap.Listener):
+class controller.SampleListener(Leap.Listener):
     finger_names = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky']
     bone_names = ['Metacarpal', 'Proximal', 'Intermediate', 'Distal']
     state_names = ['STATE_INVALID', 'STATE_START', 'STATE_UPDATE', 'STATE_END']
@@ -147,7 +147,7 @@ class SampleListener(Leap.Listener):
 
 def main():
     # Create a sample listener and controller
-    listener = SampleListener()
+    listener = controller.SampleListener()
     controller = Leap.Controller()
 
     # Have the sample listener receive events from the controller
