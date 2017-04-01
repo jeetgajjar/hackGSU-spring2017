@@ -219,3 +219,10 @@ GitHub.sublime-settings
 !.vscode/extensions.json
 
 # End of https://www.gitignore.io/api/java,python,pycharm,sublimetext,visualstudiocode
+
+#Run Directory
+/run/
+
+*.jar
+*.war
+*.ear

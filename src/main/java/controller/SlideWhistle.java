@@ -1,10 +1,13 @@
+package controller;
+
+
 /******************************************************************************\
-* Copyright (C) 2012-2013 Leap Motion, Inc. All rights reserved.               *
-* Leap Motion proprietary and confidential. Not for distribution.              *
-* Use subject to the terms of the Leap Motion SDK Agreement available at       *
-* https://developer.leapmotion.com/sdk_agreement, or another agreement         *
-* between Leap Motion and you, your company or other organization.             *
-\******************************************************************************/
+ * Copyright (C) 2012-2013 Leap Motion, Inc. All rights reserved.               *
+ * Leap Motion proprietary and confidential. Not for distribution.              *
+ * Use subject to the terms of the Leap Motion SDK Agreement available at       *
+ * https://developer.leapmotion.com/sdk_agreement, or another agreement         *
+ * between Leap Motion and you, your company or other organization.             *
+ \******************************************************************************/
 
 import java.io.IOException;
 import java.lang.Math;
@@ -97,7 +100,7 @@ class SampleListener extends Listener {
         Hand left = hands.leftmost();
         if (left.isLeft()) {
             FingerList fingers = left.fingers();
-            
+
             //System.out.println("(" + phLoc.getX() + ", " + phLoc.getY() + ")");
 
             Bone bone1 = fingers.get(0).bone(Bone.Type.TYPE_DISTAL);
@@ -117,7 +120,7 @@ class SampleListener extends Listener {
                 initialPosition = 0;
                 pinched = false;
             }
-            
+
         }
 
         int num = ((int) progress);
@@ -150,77 +153,77 @@ class SampleListener extends Listener {
         }
 
         GestureList gestures = frame.gestures();
-    //     for (int i = 0; i < gestures.count(); i++) {
-    //         Gesture gesture = gestures.get(i);
+        //     for (int i = 0; i < gestures.count(); i++) {
+        //         Gesture gesture = gestures.get(i);
 
-    //         switch (gesture.type()) {
-    //             // case TYPE_CIRCLE:
-                    
-    //             //     CircleGesture circle = new CircleGesture(gesture);
-    //             //     if (hands.count() == 1) {
-    //             //         Hand hand = hands.get(1);
-    //             //         if (hand.isLeft()) {
-    //             //             System.out.print("+++++++++++ LEFT HAND +++++++++++++++++++++++");
-    //             //         } else if (hand.isRight()) {
-    //             //             System.out.print("                           RIGHT HAND");
-    //             //         }
-    //             //     }
+        //         switch (gesture.type()) {
+        //             // case TYPE_CIRCLE:
 
-    //             //     // Calculate clock direction using the angle between circle normal and pointable
-    //             //     String clockwiseness;
-    //             //     if (circle.pointable().direction().angleTo(circle.normal()) <= Math.PI/2) {
-    //             //         // Clockwise if angle is less than 90 degrees
-    //             //         clockwiseness = "clockwise";
-    //             //     } else {
-    //             //         clockwiseness = "counterclockwise";
-    //             //     }
+        //             //     CircleGesture circle = new CircleGesture(gesture);
+        //             //     if (hands.count() == 1) {
+        //             //         Hand hand = hands.get(1);
+        //             //         if (hand.isLeft()) {
+        //             //             System.out.print("+++++++++++ LEFT HAND +++++++++++++++++++++++");
+        //             //         } else if (hand.isRight()) {
+        //             //             System.out.print("                           RIGHT HAND");
+        //             //         }
+        //             //     }
 
-    //             //     // Calculate angle swept since last frame
-    //             //     double sweptAngle = 0;
-    //             //     if (circle.state() != State.STATE_START) {
-    //             //         CircleGesture previousUpdate = new CircleGesture(controller.frame(1).gesture(circle.id()));
-    //             //         sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * Math.PI;
-    //             //     }
+        //             //     // Calculate clock direction using the angle between circle normal and pointable
+        //             //     String clockwiseness;
+        //             //     if (circle.pointable().direction().angleTo(circle.normal()) <= Math.PI/2) {
+        //             //         // Clockwise if angle is less than 90 degrees
+        //             //         clockwiseness = "clockwise";
+        //             //     } else {
+        //             //         clockwiseness = "counterclockwise";
+        //             //     }
 
-    //             //     System.out.println("  Circle id: " + circle.id()
-    //             //                + ", " + circle.state()
-    //             //                + ", progress: " + circle.progress()
-    //             //                + ", radius: " + circle.radius()
-    //             //                + ", angle: " + Math.toDegrees(sweptAngle)
-    //             //                + ", " + clockwiseness);
-    //             //     break;
-    //             // case TYPE_SWIPE:
-    //             //     if (gesture.hands().leftmost().isLeft()) { System.out.print("LEFT HAND +++++++"); }
-    //             //     SwipeGesture swipe = new SwipeGesture(gesture);
-    //             //     System.out.println("  Swipe id: " + swipe.id()
-    //             //                + ", " + swipe.state()
-    //             //                + ", position: " + swipe.position()
-    //             //                + ", direction: " + swipe.direction()
-    //             //                + ", speed: " + swipe.speed());
-    //             //     break;
-    //             // // case TYPE_SCREEN_TAP:
-    //             // //     ScreenTapGesture screenTap = new ScreenTapGesture(gesture);
-    //             // //     System.out.println("  Screen Tap id: " + screenTap.id()
-    //             // //                + ", " + screenTap.state()
-    //             // //                + ", position: " + screenTap.position()
-    //             // //                + ", direction: " + screenTap.direction());
-    //             // //     break;
-    //             // // case TYPE_KEY_TAP:
-    //             // //     KeyTapGesture keyTap = new KeyTapGesture(gesture);
-    //             // //     System.out.println("  Key Tap id: " + keyTap.id()
-    //             // //                + ", " + keyTap.state()
-    //             // //                + ", position: " + keyTap.position()
-    //             // //                + ", direction: " + keyTap.direction());
-    //             // //     break;
-    //             // default:
-    //             //     System.out.println("Unknown gesture type.");
-    //             //     break;
-    //         }
-    //     }
+        //             //     // Calculate angle swept since last frame
+        //             //     double sweptAngle = 0;
+        //             //     if (circle.state() != State.STATE_START) {
+        //             //         CircleGesture previousUpdate = new CircleGesture(controller.frame(1).gesture(circle.id()));
+        //             //         sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * Math.PI;
+        //             //     }
 
-    //     // if (!frame.hands().isEmpty() || !gestures.isEmpty()) {
-    //     //     System.out.println();
-    //     // }
+        //             //     System.out.println("  Circle id: " + circle.id()
+        //             //                + ", " + circle.state()
+        //             //                + ", progress: " + circle.progress()
+        //             //                + ", radius: " + circle.radius()
+        //             //                + ", angle: " + Math.toDegrees(sweptAngle)
+        //             //                + ", " + clockwiseness);
+        //             //     break;
+        //             // case TYPE_SWIPE:
+        //             //     if (gesture.hands().leftmost().isLeft()) { System.out.print("LEFT HAND +++++++"); }
+        //             //     SwipeGesture swipe = new SwipeGesture(gesture);
+        //             //     System.out.println("  Swipe id: " + swipe.id()
+        //             //                + ", " + swipe.state()
+        //             //                + ", position: " + swipe.position()
+        //             //                + ", direction: " + swipe.direction()
+        //             //                + ", speed: " + swipe.speed());
+        //             //     break;
+        //             // // case TYPE_SCREEN_TAP:
+        //             // //     ScreenTapGesture screenTap = new ScreenTapGesture(gesture);
+        //             // //     System.out.println("  Screen Tap id: " + screenTap.id()
+        //             // //                + ", " + screenTap.state()
+        //             // //                + ", position: " + screenTap.position()
+        //             // //                + ", direction: " + screenTap.direction());
+        //             // //     break;
+        //             // // case TYPE_KEY_TAP:
+        //             // //     KeyTapGesture keyTap = new KeyTapGesture(gesture);
+        //             // //     System.out.println("  Key Tap id: " + keyTap.id()
+        //             // //                + ", " + keyTap.state()
+        //             // //                + ", position: " + keyTap.position()
+        //             // //                + ", direction: " + keyTap.direction());
+        //             // //     break;
+        //             // default:
+        //             //     System.out.println("Unknown gesture type.");
+        //             //     break;
+        //         }
+        //     }
+
+        //     // if (!frame.hands().isEmpty() || !gestures.isEmpty()) {
+        //     //     System.out.println();
+        //     // }
     }
 }
 
