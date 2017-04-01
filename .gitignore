@@ -230,3 +230,5 @@ src/main/java/model/
 src/main/java/view/
 !/src/main/java/view/
 !/src/main/java/model/
+!/src/LeapSDK/
+!/src/main/java/LeapJava.jar
