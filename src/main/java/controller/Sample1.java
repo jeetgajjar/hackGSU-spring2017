@@ -156,7 +156,7 @@ class SampleListener extends Listener {
     }
 }
 
-class Sample {
+class Sample1 {
     public static void main(String[] args) {
         // Create a sample listener and controller
         SampleListener listener = new SampleListener();
