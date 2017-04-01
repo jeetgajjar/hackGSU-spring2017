@@ -135,11 +135,11 @@ class SampleListener extends Listener {
                                 counter -= 0.001;
                             }
                         }
-                        System.out.print("🍆 ");
+                        System.out.print("process started ");
                         for (double j = 0; j < counter; j+=0.01) {
-                            System.out.print(" 💦");
+                            System.out.print(" %");
                         }
-                        System.out.println(" 😩");
+                        System.out.println("%");
                         break;
                         //}
                     }
