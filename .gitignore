@@ -224,6 +224,7 @@ GitHub.sublime-settings
 #Run Directory
 /run/
 
-*.jar
-*.war
-*.ear
+.idea/artifacts/
+src/LeapSDK/
+src/main/java/model/
+src/main/java/view/
