@@ -17,7 +17,7 @@ public class Visuals {
         title.setFont(new Font(title.getFont().getName(), Font.PLAIN, 40));
         panel.add(title);
         // Names
-        JLabel names = new JLabel("Team SWAGMONEY DAB LIT");
+        JLabel names = new JLabel("Team name here");
         names.setBounds(20,80,400,60);
         names.setFont(new Font(names.getFont().getName(), Font.PLAIN, 20));
 

@@ -1,5 +1,4 @@
 // package controller;
-
 import java.io.IOException;
 import java.lang.Math;
 import com.leapmotion.leap.*;
@@ -12,22 +11,28 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField; 
 import java.awt.Font;
 import java.awt.BorderLayout;
+import javax.swing.ImageIcon;
+import java.awt.geom.Area;
+import java.awt.Component;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 class SampleListener extends Listener {
     double counter = 0;
     Frame mainFrame;
     JFrame viewFrame;
-    JButton button;
+    JLabel button;
     public JPanel panel;
 
     public SampleListener(JPanel pan) {
         //viewFrame = frame;
         //JPanel panel = (JPanel) (viewFrame.getContentPane());
-        button = new JButton("CURSOR");
+        ImageIcon icon = new ImageIcon("../../../icons/hand.png");
+        button = new JLabel(icon);
         panel = pan;
-        button.setSize(100,40);
-        button.setBounds(500, 280, 100, 40);
+        button.setBounds(500, 300, 25, 25);
         panel.add(button);
+        panel.setComponentZOrder(button, 0);
         panel.revalidate();
         panel.repaint();
     }
@@ -54,9 +59,7 @@ class SampleListener extends Listener {
 
     public void onFrame(Controller controller) {
         String condition = "start";
-        if (condition.equals("start")) {
-            start(controller);
-        }
+        mouse(controller);
         // Get the most recent frame and report some basic information
         Frame frame = controller.frame();
         mainFrame = controller.frame();
@@ -73,7 +76,9 @@ class SampleListener extends Listener {
         //                      + ", position: " + tool.tipPosition()
         //                      + ", direction: " + tool.direction());
         }
-
+        if (checkPinch(frame)) {
+            clickStart();
+        }
         GestureList gestures = frame.gestures();
         for (int i = 0; i < gestures.count(); i++) {
             Gesture gesture = gestures.get(i);
@@ -82,9 +87,7 @@ class SampleListener extends Listener {
                 case TYPE_CIRCLE:
 
                     Hand hand = frame.hands().leftmost();
-                    if (hand.isRight()) {
-                        System.out.println("ya");
-                    } else if (hand.isLeft()) {
+                    if (hand.isLeft()) {
                         CircleGesture circle = new CircleGesture(gesture);
 
                         // Calculate clock direction using the angle between circle normal and pointable
@@ -126,6 +129,11 @@ class SampleListener extends Listener {
                         break;
                         //}
                     }
+                    case TYPE_SCREEN_TAP:
+                        ScreenTapGesture screenTap = new ScreenTapGesture(gesture);
+                        
+                        break;
+
                     default:
                         System.out.println("Unknown gesture type.");
                         break;
@@ -141,13 +149,7 @@ class SampleListener extends Listener {
                 //                + ", direction: " + swipe.direction()
                 //                + ", speed: " + swipe.speed());
                 //     break;
-                // case TYPE_SCREEN_TAP:
-                //     ScreenTapGesture screenTap = new ScreenTapGesture(gesture);
-                //     System.out.println("  Screen Tap id: " + screenTap.id()
-                //                + ", " + screenTap.state()
-                //                + ", position: " + screenTap.position()
-                //                + ", direction: " + screenTap.direction());
-                //     break;
+                
                 // case TYPE_KEY_TAP:
                 //     KeyTapGesture keyTap = new KeyTapGesture(gesture);
                 //     System.out.println("  Key Tap id: " + keyTap.id()
@@ -163,7 +165,37 @@ class SampleListener extends Listener {
         }
     }
 
-    public void start(Controller controller) {
+    public boolean checkPinch(Frame frame) {
+        Hand right = frame.hands().rightmost();
+        FingerList fingers = right.fingers();
+
+                //System.out.println("(" + phLoc.getX() + ", " + phLoc.getY() + ")");
+
+                Bone bone1 = fingers.get(0).bone(Bone.Type.TYPE_DISTAL);
+                Vector loc1 = bone1.center();
+                Bone bone2 = fingers.get(1).bone(Bone.Type.TYPE_DISTAL);
+                Vector loc2 = bone2.center();
+
+                if (loc1.distanceTo(loc2) < 40) {
+                    return true;
+                } return false;
+    }
+
+    public void clickStart() {
+        Area userArea = new Area(button.getBounds());
+                        Component[] items = panel.getComponents();
+                        for (Component c: items) {
+                            Area newArea = new Area(c.getBounds());
+                            if (button != c && newArea.intersects(userArea.getBounds2D())) {
+                                if (c instanceof JButton) {
+                                    ((JButton) c).doClick();
+                                    System.out.print("Click");
+                                }
+                            }
+                        }
+    }
+
+    public void mouse(Controller controller) {
         Frame frame = controller.frame();
         mainFrame = controller.frame();
 
@@ -173,6 +205,10 @@ class SampleListener extends Listener {
         if (cursorHand.isValid()) {
             cursor(position);
         }
+
+    }
+
+    public void startSim() {
 
     }
 
@@ -195,9 +231,9 @@ class SampleListener extends Listener {
         //position = calibrate(position);
         double x = (position.getX()+150)*10/3;
         double y = 600 - ((position.getY() - 150) * 3);
-        System.out.println("X: " + x + "Y: " + y);
+        //System.out.println("X: " + x + "Y: " + y);
 
-        button.setLocation((int)x,(int)y);
+        button.setLocation((int)x-1,(int)y-1);
         panel.revalidate();
         panel.repaint();
 
@@ -209,7 +245,13 @@ public class Runner {
     public static void main(String[] args) {
         // Create a sample listener and controller
 
-        JFrame frame = new JFrame("My First Swing Example");
+        JFrame frame = new JFrame("F R A M E");
+        try {
+            frame.setContentPane(
+                new JLabel(new ImageIcon(ImageIO.read(new File("../../../folderImage/soccerField.png")))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         JPanel panel = new JPanel();   
 
         // Setting the width and height of frame
@@ -272,8 +314,8 @@ public class Runner {
         panel.add(names);
 
         JButton startButton = new JButton("START");
-        startButton.setSize(100,40);
-        startButton.setBounds(450, 280, 100, 40);
+        startButton.setSize(200,80);
+        startButton.setBounds(400, 220, 200, 80);
         panel.add(startButton);
     }
 }
