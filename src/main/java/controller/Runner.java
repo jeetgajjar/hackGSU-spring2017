@@ -1,19 +1,36 @@
-/******************************************************************************\
-* Copyright (C) 2012-2013 Leap Motion, Inc. All rights reserved.               *
-* Leap Motion proprietary and confidential. Not for distribution.              *
-* Use subject to the terms of the Leap Motion SDK Agreement available at       *
-* https://developer.leapmotion.com/sdk_agreement, or another agreement         *
-* between Leap Motion and you, your company or other organization.             *
-\******************************************************************************/
+// package controller;
 
 import java.io.IOException;
 import java.lang.Math;
 import com.leapmotion.leap.*;
 import com.leapmotion.leap.Gesture.State;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField; 
+import java.awt.Font;
+import java.awt.BorderLayout;
 
 class SampleListener extends Listener {
     double counter = 0;
     Frame mainFrame;
+    JFrame viewFrame;
+    JButton button;
+    public JPanel panel;
+
+    public SampleListener(JPanel pan) {
+        //viewFrame = frame;
+        //JPanel panel = (JPanel) (viewFrame.getContentPane());
+        button = new JButton("CURSOR");
+        panel = pan;
+        button.setSize(100,40);
+        button.setBounds(500, 280, 100, 40);
+        panel.add(button);
+        panel.revalidate();
+        panel.repaint();
+    }
     public void onInit(Controller controller) {
         System.out.println("Initialized");
     }
@@ -36,6 +53,10 @@ class SampleListener extends Listener {
     }
 
     public void onFrame(Controller controller) {
+        String condition = "start";
+        if (condition.equals("start")) {
+            start(controller);
+        }
         // Get the most recent frame and report some basic information
         Frame frame = controller.frame();
         mainFrame = controller.frame();
@@ -45,44 +66,6 @@ class SampleListener extends Listener {
         //                  + ", fingers: " + frame.fingers().count()
         //                  + ", tools: " + frame.tools().count()
         //                  + ", gestures " + frame.gestures().count());
-
-        //Get hands
-        for(Hand hand : frame.hands()) {
-            String handType = hand.isLeft() ? "Left hand" : "Right hand";
-            // System.out.println("  " + handType + ", id: " + hand.id()
-            //                  + ", palm position: " + hand.palmPosition());
-
-            // Get the hand's normal vector and direction
-            Vector normal = hand.palmNormal();
-            Vector direction = hand.direction();
-
-            // Calculate the hand's pitch, roll, and yaw angles
-            // System.out.println("  pitch: " + Math.toDegrees(direction.pitch()) + " degrees, "
-            //                  + "roll: " + Math.toDegrees(normal.roll()) + " degrees, "
-            //                  + "yaw: " + Math.toDegrees(direction.yaw()) + " degrees");
-
-            // Get arm bone
-            Arm arm = hand.arm();
-            // System.out.println("  Arm direction: " + arm.direction()
-            //                  + ", wrist position: " + arm.wristPosition()
-            //                  + ", elbow position: " + arm.elbowPosition());
-
-            // Get fingers
-            // for (Finger finger : hand.fingers()) {
-                // System.out.println("    " + finger.type() + ", id: " + finger.id()
-                //                  + ", length: " + finger.length()
-                //                  + "mm, width: " + finger.width() + "mm");
-
-                //Get Bones
-                // for(Bone.Type boneType : Bone.Type.values()) {
-            //         Bone bone = finger.bone(boneType);
-            //         System.out.println("      " + bone.type()
-            //                          + " bone, start: " + bone.prevJoint()
-            //                          + ", end: " + bone.nextJoint()
-            //                          + ", direction: " + bone.direction());
-            //     }
-            // }
-        }
 
         // Get tools
         for(Tool tool : frame.tools()) {
@@ -179,16 +162,86 @@ class SampleListener extends Listener {
             //System.out.println();
         }
     }
+
+    public void start(Controller controller) {
+        Frame frame = controller.frame();
+        mainFrame = controller.frame();
+
+        Hand cursorHand = frame.hands().rightmost();
+        Vector position = calibrate(cursorHand.palmPosition());
+        
+        if (cursorHand.isValid()) {
+            cursor(position);
+        }
+
+    }
+
+    public Vector calibrate(Vector position) {
+        double x = position.getX();
+        x = x > 150 ? 150 : x;
+        x = x < -150? -150 : x;
+        double y = position.getY();
+
+        y = y > 350 ? 350 : y;
+        y = y < 150? 150 : y;
+
+        position.setX((float)x);
+        position.setY((float)y);
+
+        return position;
+    }
+
+    public void cursor(Vector position) {
+        //position = calibrate(position);
+        double x = (position.getX()+150)*10/3;
+        double y = 600 - ((position.getY() - 150) * 3);
+        System.out.println("X: " + x + "Y: " + y);
+
+        button.setLocation((int)x,(int)y);
+        panel.revalidate();
+        panel.repaint();
+
+
+    }
 }
 
-class Sample {
+public class Runner {
     public static void main(String[] args) {
         // Create a sample listener and controller
-        SampleListener listener = new SampleListener();
+
+        JFrame frame = new JFrame("My First Swing Example");
+        JPanel panel = new JPanel();   
+
+        // Setting the width and height of frame
+        frame.setSize(1000, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        /* Creating panel. This is same as a div tag in HTML
+         * We can create several panels and add them to specific 
+         * positions in a JFrame. Inside panels we can add text 
+         * fields, buttons and other components.
+         */ 
+        // adding panel to frame
+        frame.add(panel);
+        /* calling user defined method for adding components
+         * to the panel.
+         */
+        placeComponents(panel);
+
+        // Setting the frame visibility to true
+
+        SampleListener listener = new SampleListener(panel);
         Controller controller = new Controller();
+
+
+        frame.setVisible(true);
 
         // Have the sample listener receive events from the controller
         controller.addListener(listener);
+
+        if (panel == listener.panel) {
+            System.out.println("OK OK OK ");
+        }
 
         // Keep this process running until Enter is pressed
         System.out.println("Press Enter to quit...");
@@ -200,5 +253,27 @@ class Sample {
 
         // Remove the sample listener when done
         controller.removeListener(listener);
+    }
+
+    private static void placeComponents(JPanel panel) {
+
+        panel.setLayout(null);
+
+        // Title
+        JLabel title = new JLabel("PlayMaker");
+        title.setBounds(20,20,200,60);
+        title.setFont(new Font(title.getFont().getName(), Font.PLAIN, 40));
+        panel.add(title);
+        // Names
+        JLabel names = new JLabel("Team <Team Name>");
+        names.setBounds(20,80,400,60);
+        names.setFont(new Font(names.getFont().getName(), Font.PLAIN, 20));
+
+        panel.add(names);
+
+        JButton startButton = new JButton("START");
+        startButton.setSize(100,40);
+        startButton.setBounds(450, 280, 100, 40);
+        panel.add(startButton);
     }
 }
