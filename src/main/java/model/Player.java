@@ -19,7 +19,7 @@ public class Player{
 		xPos = x;
 	}
 
-	public void setY(double Y) {
+	public void setY(double y) {
 		yPos = y;
 	}
 
