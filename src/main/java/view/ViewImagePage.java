@@ -12,7 +12,7 @@ public class ViewImagePage {
     public static void main(String[] args) {
         JFrame f = new JFrame();
         try {
-            f.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("/Users/leochen/Desktop/resizedfield-3.png")))));
+            f.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("../../../folderImage/soccerField.png")))));
         } catch (IOException e) {
             e.printStackTrace();
         }
