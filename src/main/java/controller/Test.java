@@ -1,4 +1,4 @@
-package controller;
+// package controller;
 /******************************************************************************\
 * Copyright (C) 2012-2013 Leap Motion, Inc. All rights reserved.               *
 * Leap Motion proprietary and confidential. Not for distribution.              *
@@ -13,7 +13,7 @@ import com.leapmotion.leap.*;
 import com.leapmotion.leap.Gesture.State;
 
 
-class Test {
+public class Test {
     private static class SampleListener extends Listener {
         double progress = 0;
         double initialPosition = 0;
@@ -117,11 +117,15 @@ class Test {
             }
 
             int num = ((int) progress) / 200;
-            System.out.print("8=");
+            System.out.print("HACKING THE MAINFRAME: ");
             for (int i = 0; i < num; i ++ ) {
-                System.out.print("=");
+                if (i%2 == 0) {
+                    System.out.print("beep ");
+                } else {
+                    System.out.print("boop ");
+                }
             }
-            System.out.println("D");
+            System.out.println("");
 
             GestureList gestures = frame.gestures();
             //     for (int i = 0; i < gestures.count(); i++) {

@@ -17,17 +17,18 @@ import javax.imageio.ImageIO;
 import java.io.File;
 
 public class SampleListener extends Listener {
-    double counter = 0;
     Frame mainFrame;
     JFrame viewFrame;
     JLabel mouse;
     public JPanel panel;
     int time = 0;
+    int simTime = 0;
     boolean selectedItem = false;
     int startTime = 0;
     int endTime = 0;
-    Player[] team;
+    JLabel[] team;
     FieldFrame[] movie;
+    JLabel lab;
     
 
 
@@ -138,37 +139,27 @@ public class SampleListener extends Listener {
                         //            + ", angle: " + Math.toDegrees(sweptAngle)
                         //            + ", " + clockwiseness);
                         if (clockwiseness.equals("clockwise")) {
-                            if (counter <= 1) {
-                                counter += 0.001;
+                            if (simTime <= 299) {
+                                simTime += 1;
                             }
                         } else if (clockwiseness.equals("counterclockwise")) {
-                            if (counter >= 0) {
-                                counter -= 0.001;
+                            if (simTime >= 0) {
+                                simTime -= 1;
                             }
                         }
-                        System.out.print("process started ");
                         // for (double j = 0; j < counter; j+=0.05) {
                         //     System.out.print(" %");
                         // }
                         // System.out.println("%");
-                        counter = counter * 20;
-                        time = (int) counter;
                         //draw(time);
+                        int time = simTime / 2;
+                        System.out.println("TIME: " + time);
                         FieldFrame current = movie[time];
-        for (int j = 0; j < team.length; j++) {
-            System.out.println(j);
-            if (!(team[j].isSelected())) {
-                System.out.println("CHECKMARK");
-                team[i].setLocation(current.getRoster()[j][0], current.getRoster()[j][1]);
-            } else {
-                int x = (int)(mouse.getLocation().getX());
-                int y = (int)(mouse.getLocation().getY());
-                team[j].setLocation(x,y);
-            }
-        }
+                        draw(time);
 
-        panel.revalidate();
-        panel.repaint();
+                        panel.revalidate();
+                        panel.repaint();
+                        System.out.println("end of circle");
                         break;
                         //}
                     }
@@ -214,21 +205,48 @@ public class SampleListener extends Listener {
 
     public void draw(int newTime) {
         FieldFrame current = movie[newTime];
-        for (int i = 0; i < team.length; i++) {
-            if (!(team[i].isSelected())) {
-                System.out.println("CHECKMARK");
-                team[i].setLocation(current.getRoster()[i][0], current.getRoster()[i][1]);
-            } else {
-                int x = (int)(mouse.getLocation().getX());
-                int y = (int)(mouse.getLocation().getY());
-                team[i].setLocation(x,y);
+        // for (int i = 0; i < team.length; i++) {
+        //     panel.remove(team[i]);
+        //     panel.add(team[i]);
+        //     if (!(((Player) team[i]).isSelected())) {
+        //         team[i].setLocation(800,10);
+        //         System.out.print(team[i].getLocation());
+        //         panel.revalidate();
+        //         panel.repaint();
+        //         System.out.println(team[i].getLocation());
+
+        //         //team[i].setLocation(current.getRoster()[i][0], current.getRoster()[i][1]);
+        //     } else {
+        //         int x = (int)(mouse.getLocation().getX());
+        //         int y = (int)(mouse.getLocation().getY());
+        //         team[i].setLocation(x,y);
+                
+        //     }
+        
+        // }
+
+        for (Player p: (Player[]) team) {
+            if (!(p.isSelected())) {
+                int i = p.getID();
+                p.setLocation(current.getRoster()[i][0], current.getRoster()[i][1]);
+                panel.setComponentZOrder(lab, panel.countComponents()-1);
+                panel.revalidate();
+                panel.repaint(0,0,1000,600);
+                System.out.println(p.getLocation());
             }
         }
-
+        JPanel newPanel = new JPanel();
+        for (Player p: (Player[]) team) {
+            newPanel.add(p);
+            System.out.println("TEST");
+        }
+        ((JFrame) (panel.getParent())).setContentPane((JPanel) newPanel);
+        panel = newPanel;
         panel.revalidate();
         panel.repaint();
         // draw shit TODO
     }
+
 
     public boolean checkPinch(Frame frame) {
         Hand right = frame.hands().rightmost();
@@ -280,9 +298,9 @@ public class SampleListener extends Listener {
         // JPanel mainPanel = new JPanel();
         // JButton butt = null;
 
-        // viewFrame.setContentPane(mainPanel);
-        // mainPanel.setLayout(null);
-        JLabel lab = null;
+        
+        panel.setLayout(null);
+        lab = null;
         panel.removeAll();
 
         try {
@@ -293,17 +311,17 @@ public class SampleListener extends Listener {
             e.printStackTrace();
         }
         lab.setBounds(0,0,1000,600);
-        for (Player p:team) {
+        for (JLabel p:team) {
             panel.add(p);
         }
         panel.add(lab);
         panel.add(mouse);
         panel.setComponentZOrder(lab, panel.countComponents() - 1);
-        viewFrame.pack();
-        viewFrame.setVisible(true);
-        viewFrame.invalidate();
-        viewFrame.validate();
-        viewFrame.repaint();
+        // viewFrame.pack();
+        // viewFrame.setVisible(true);
+        // viewFrame.invalidate();
+        // viewFrame.validate();
+        // viewFrame.repaint();
         panel.revalidate();
         panel.repaint();
     }
